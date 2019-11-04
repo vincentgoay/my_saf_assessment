@@ -95,6 +95,7 @@ app.get('/api/book/:id', (req, res) => {
         .then(result => {
             const book = result[0];
             book.authors = String(result[0].authors).split('|')
+            book.genres = String(result[0].genres).split('|')
             console.log('Book: ', book);
 
             res.status(200).type('application/json')
