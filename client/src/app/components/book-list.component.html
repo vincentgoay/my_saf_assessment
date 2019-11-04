@@ -29,7 +29,7 @@
     <button type="button" (click)="back()">Back</button>
   </div>
   <div>
-    <button type="button" (click)="previous()">Previous</button>
-    <button type="button" (click)="next()">Next</button>
+    <button type="button" (click)="previous()"  [disabled]="isPrevDisabled()">Previous</button>
+    <button type="button" (click)="next()" [disabled]='isNextDisabled()'>Next</button>
   </div>
 </div>

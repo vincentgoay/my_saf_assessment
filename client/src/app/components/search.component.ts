@@ -10,11 +10,14 @@ import { SearchCriteria } from '../models';
 })
 export class SearchComponent implements OnInit {
 
+  limit = 5;
+
   constructor(private router: Router) { }
 
   ngOnInit() { }
 
   search(form: NgForm) {
+    console.log('Form value: ', form.value);
     this.router.navigate([ '/books' ], { state: form.value as SearchCriteria });
     form.resetForm();
   }

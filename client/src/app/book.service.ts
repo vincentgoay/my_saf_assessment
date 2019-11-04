@@ -8,10 +8,15 @@ export class BookService {
 
   getBooks(searchCriteria: SearchCriteria): Promise<BooksResponse> {
     //TODO - for Task 3 and Task 4
-    const params = new HttpParams()
+    let params = new HttpParams()
       .set('terms', searchCriteria.terms)
-      // .set('start', searchCriteria.offset.toString())
-      // .set('size', searchCriteria.limit.toString());
+
+    if (searchCriteria.limit) {
+      params = params.append('size', searchCriteria.limit.toString());
+    }
+    if (searchCriteria.offset) {
+      params = params.append('start', searchCriteria.offset.toString());
+    }
 
     const headers = new HttpHeaders()
       .set('Accept', 'application/json');

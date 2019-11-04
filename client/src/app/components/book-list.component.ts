@@ -17,7 +17,7 @@ export class BookListComponent implements OnInit {
   books: BooksResponse = null;
 
   constructor(private router: Router, private activatedRoute: ActivatedRoute
-      , private bookSvc: BookService) { }
+    , private bookSvc: BookService) { }
 
   ngOnInit() {
     const state = window.history.state;
@@ -33,8 +33,8 @@ export class BookListComponent implements OnInit {
     }
     this.bookSvc.getBooks(searchCriterial)
       .then(result => {
-        console.log('BooksResponse: ', result);
         this.books = result;
+        this.updateFlag();
       }).catch(error => {
         const errorResponse = error as ErrorResponse;
         alert(`Status: ${errorResponse.status}\nMessage: ${errorResponse.message}`)
@@ -43,10 +43,53 @@ export class BookListComponent implements OnInit {
 
   next() {
     //TODO - for Task 4
+    const total = this.books.total;
+
+    const searchCriteria: SearchCriteria = {
+      terms: this.terms,
+      limit: this.limit,
+      offset: this.books.offset + this.books.limit
+    }
+
+    this.fetchBooks(searchCriteria);
   }
 
   previous() {
     //TODO - for Task 4
+    const total = this.books.total;
+
+    const searchCriteria: SearchCriteria = {
+      terms: this.terms,
+      limit: this.limit,
+      offset: this.books.offset - this.books.limit
+    }
+
+    this.fetchBooks(searchCriteria);
+  }
+
+  fetchBooks(searchCriteria: SearchCriteria) {
+    this.bookSvc.getBooks(searchCriteria)
+      .then(result => {
+        this.books = result;
+        this.updateFlag();
+      }).catch(error => {
+        const errorResponse = error as ErrorResponse;
+        alert(`Status: ${errorResponse.status}\nMessage: ${errorResponse.message}`)
+      })
+  }
+
+  isNextDisabled(): boolean {
+    return (this.books.offset || 0 + this.books.limit) < this.books.total;
+  }
+
+  isPrevDisabled(): boolean {
+    return (this.books.offset || 0 + this.books.limit) < this.books.total;
+  }
+
+  updateFlag() {
+    console.log('Update flag');
+    // this.isNextDisabled = true;//(this.books.offset || 0 + this.books.limit) < this.books.total;
+    // this.isPrevDisabled =  (this.books.offset || 0 + this.books.limit) < this.books.total;
   }
 
   bookDetails(book_id: string) {
@@ -57,5 +100,4 @@ export class BookListComponent implements OnInit {
   back() {
     this.router.navigate(['/']);
   }
-
 }
