@@ -34,7 +34,6 @@ export class BookListComponent implements OnInit {
     this.bookSvc.getBooks(searchCriterial)
       .then(result => {
         this.books = result;
-        this.updateFlag();
       }).catch(error => {
         const errorResponse = error as ErrorResponse;
         alert(`Status: ${errorResponse.status}\nMessage: ${errorResponse.message}`)
@@ -71,7 +70,6 @@ export class BookListComponent implements OnInit {
     this.bookSvc.getBooks(searchCriteria)
       .then(result => {
         this.books = result;
-        this.updateFlag();
       }).catch(error => {
         const errorResponse = error as ErrorResponse;
         alert(`Status: ${errorResponse.status}\nMessage: ${errorResponse.message}`)
@@ -79,22 +77,17 @@ export class BookListComponent implements OnInit {
   }
 
   isNextDisabled(): boolean {
-    return (this.books.offset || 0 + this.books.limit) < this.books.total;
+    return !((this.books.offset + this.books.limit) < this.books.total);
   }
 
   isPrevDisabled(): boolean {
-    return (this.books.offset || 0 + this.books.limit) < this.books.total;
-  }
-
-  updateFlag() {
-    console.log('Update flag');
-    // this.isNextDisabled = true;//(this.books.offset || 0 + this.books.limit) < this.books.total;
-    // this.isPrevDisabled =  (this.books.offset || 0 + this.books.limit) < this.books.total;
+    return !((this.books.offset - this.books.limit) >= 0);
   }
 
   bookDetails(book_id: string) {
     //TODO
     console.info('Book id: ', book_id);
+    this.router.navigate(['book', book_id]);
   }
 
   back() {

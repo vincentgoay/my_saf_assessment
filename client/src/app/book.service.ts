@@ -29,6 +29,9 @@ export class BookService {
 
   getBook(bookId: string): Promise<BookResponse> {
     //TODO - for Task 5
-    return (null);
+    const url = `api/search/${bookId}`;
+    console.log('API Request: ', url);
+    
+    return this.http.get<BookResponse>(url).toPromise();
   }
 }
