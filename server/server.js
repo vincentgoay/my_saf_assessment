@@ -22,9 +22,12 @@ const SEARCH_BOOK_BY_NAME_OR_TITLE =
     'Select book_id, title, authors, rating from book2018 where title like ? or authors like ? limit ? offset ?';
 const COUNT_BOOKS_SEARCH_BY_NAME_OR_TITLE =
     'Select count(*) as book_count from book2018 where title like ? or authors like ?';
-const searchBooksByNameOrTitle = mkQuery(SEARCH_BOOK_BY_NAME_OR_TITLE, pool);
+const GET_BOOK_BY_ID =
+    'Select * from book2018 where book_id = ?';
 
+const searchBooksByNameOrTitle = mkQuery(SEARCH_BOOK_BY_NAME_OR_TITLE, pool);
 const countBooksByNameOrTitle = mkQuery(COUNT_BOOKS_SEARCH_BY_NAME_OR_TITLE, pool);
+const getBookById = mkQuery(GET_BOOK_BY_ID, pool);
 
 /// Define routes
 app.get('/api/search', (req, res) => {
@@ -51,7 +54,7 @@ app.get('/api/search', (req, res) => {
                 }
                 return book;
             })
-            
+
             const bookResponse = {
                 data: books,
                 terms: terms,
@@ -78,6 +81,43 @@ app.get('/api/search', (req, res) => {
                 timestamp: new Date().getTime()
             }
             console.log('ErrorResponse: ', errorResponse);
+        })
+})
+
+app.get('/api/book/:id', (req, res) => {
+    const book_id = req.params.id;
+
+    getBookById([book_id])
+        .then(result => {
+            console.log('GetBookById Result: ', result);
+/*
+            book_id: string;
+            title: string;
+            authors: string[];
+            description: string;
+            edition: string;
+            format: string;
+            pages: number;
+            rating: number;
+            rating_count: number;
+            review_count: number;
+            genres: string[];
+            image_url: string;
+*/
+            // const book = {
+            //     book_id: result.book_id,
+            //     title: result.title,
+            //     authors: String(result.authors).split('|'),
+            //     description: result.description,
+            //     edition: result.edition,
+            //     format: result.format,
+            //     pages: result.pages,
+
+            // }
+            const book = result;
+            book.authors = String(result.authors).split('|')
+            console.log('Book: ', book);
+            
         })
 })
 
