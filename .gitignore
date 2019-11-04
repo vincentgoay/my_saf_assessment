@@ -1,3 +1,6 @@
-/server/node_modules
-/server/package-lock.json
-/server/config.js
+# Ignore files in client directory
+
+# Ignore files in server directory
+server/node_modules
+server/package-lock.json
+server/config.js
