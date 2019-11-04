@@ -18,5 +18,4 @@ export class SearchComponent implements OnInit {
     this.router.navigate([ '/books' ], { state: form.value as SearchCriteria });
     form.resetForm();
   }
-
 }

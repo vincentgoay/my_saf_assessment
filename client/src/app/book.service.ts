@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { SearchCriteria, BooksResponse, BookResponse } from './models';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 
 @Injectable()
 export class BookService {
@@ -8,7 +8,18 @@ export class BookService {
 
   getBooks(searchCriteria: SearchCriteria): Promise<BooksResponse> {
     //TODO - for Task 3 and Task 4
-    return (null);
+    const params = new HttpParams()
+      .set('terms', searchCriteria.terms)
+      // .set('start', searchCriteria.offset.toString())
+      // .set('size', searchCriteria.limit.toString());
+
+    const headers = new HttpHeaders()
+      .set('Accept', 'application/json');
+
+    const url = 'api/search'
+    console.log('API Request: ', url);
+
+    return this.http.get<BooksResponse>(url, { headers, params}).toPromise();
   }
 
   getBook(bookId: string): Promise<BookResponse> {
