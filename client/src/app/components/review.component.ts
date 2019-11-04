@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BookService } from '../book.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorResponse, ReviewResponse } from '../models';
 
 @Component({
@@ -10,15 +10,17 @@ import { ErrorResponse, ReviewResponse } from '../models';
 })
 export class ReviewComponent implements OnInit {
 
+  book_id: null;
   reviewResponse: ReviewResponse = null;
 
   constructor(private bookSvc: BookService,
-    private activatedRoute: ActivatedRoute) { }
+    private activatedRoute: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit() {
-    const book_id = this.activatedRoute.snapshot.params.id;
-    console.log('Book Id: ', book_id);
-    this.bookSvc.getReviews(book_id)
+    this.book_id = this.activatedRoute.snapshot.params.id;
+    console.log('Book Id: ', this.book_id);
+    this.bookSvc.getReviews(this.book_id)
       .then(result => {
         console.log('Review response: ', result);
         this.reviewResponse = result;
@@ -29,4 +31,7 @@ export class ReviewComponent implements OnInit {
       })
   }
 
+  back() {
+    this.router.navigate(['book', this.book_id]);
+  }
 }

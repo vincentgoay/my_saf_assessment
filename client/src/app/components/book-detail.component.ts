@@ -33,4 +33,8 @@ export class BookDetailComponent implements OnInit {
     console.log('Show reviews');
     this.router.navigate(['book', this.bookResponse.data.book_id, 'review']);
   }
+
+  back() {
+    this.router.navigate(['/books']);
+  }
 }
