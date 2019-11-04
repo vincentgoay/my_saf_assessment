@@ -78,12 +78,12 @@ app.get('/api/search', (req, res) => {
         })
         .catch(error => {
             const errorResponse = {
-                status: 400,
+                status: 500,
                 message: error,
                 timestamp: new Date().getTime()
             }
 
-            res.statusCode(400).type('application/json')
+            res.statusCode(500).type('application/json')
                 .json(errorResponse);
         })
 })
@@ -105,11 +105,11 @@ app.get('/api/book/:id', (req, res) => {
         })
         .catch(error => {
             const errorResponse = {
-                status: 400,
+                status: 500,
                 message: error,
                 timestamp: new Date().getTime()
             }
-            res.statusCode(400).type('application/json')
+            res.statusCode(500).type('application/json')
                 .json(errorResponse);
         })
 })
@@ -155,22 +155,22 @@ app.get('/api/book/:id/review', (req, res) => {
                         });
                 } else {
                     const errorResponse = {
-                        status: 400,
+                        status: 500,
                         message: error,
                         timestamp: new Date().getTime()
                     }
-                    res.statusCode(400).type('application/json')
+                    res.statusCode(500).type('application/json')
                         .json(errorResponse);
                 }
             })
         })
         .catch(error => {
             const errorResponse = {
-                status: 400,
+                status: 500,
                 message: error,
                 timestamp: new Date().getTime()
             }
-            res.statusCode(400).type('application/json')
+            res.statusCode(500).type('application/json')
                 .json(errorResponse);
         })
 })
