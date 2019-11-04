@@ -42,10 +42,11 @@ app.get('/api/search', (req, res) => {
             const countBooks = results[1];
 
             const books = data.map(v => {
+                const authorsArray = String(v['authors']).split('|');
                 const book = {
                     book_id: v['book_id'],
                     title: v['title'],
-                    authors: v['authors'],
+                    authors: authorsArray,
                     rating: v['rating']
                 }
                 return book;

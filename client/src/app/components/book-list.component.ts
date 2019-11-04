@@ -33,6 +33,7 @@ export class BookListComponent implements OnInit {
     }
     this.bookSvc.getBooks(searchCriterial)
       .then(result => {
+        console.log('BooksResponse: ', result);
         this.books = result;
       }).catch(error => {
         const errorResponse = error as ErrorResponse;
