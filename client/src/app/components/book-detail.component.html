@@ -1,1 +1,44 @@
-<p>book-detail works!</p>
+<div *ngIf="bookResponse">
+    <p>
+        Book ID: {{ bookResponse.data.book_id}}
+    </p>
+    <p>
+        Title: <br>{{ bookResponse.data.title}}
+    </p>
+    <p>
+        Aurthors: <br> {{ bookResponse.data.authors}}
+    </p>
+
+    <p>
+        Description: <br>{{ bookResponse.data.description}}
+    </p>
+
+    <p>
+        Edition: <br>{{ bookResponse.data.edition}}
+    </p>
+    <p>
+        Format: <br>{{ bookResponse.data.format}}
+    </p>
+
+    <p>
+        Pages:<br> {{ bookResponse.data.pages}}
+    </p>
+    <p>
+        Rating: <br>{{ bookResponse.data.rating}}
+    </p>
+    <p>
+        Rating Count: <br>{{ bookResponse.data.rating_count}}
+    </p>
+    <p>
+        Review Count: <br>{{ bookResponse.data.review_count}}
+        <span>
+            <button (click)="showAllReview()">Show All Reviews</button>
+        </span>
+    </p>
+    <p>
+        Genres: <br>{{ bookResponse.data.genres}}
+    </p>
+    <p>
+        ImageUrl: <br>{{ bookResponse.data.image_url}}
+    </p>
+</div>

@@ -1,8 +1,10 @@
 /// Load libraries
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const path = require('path');
+const request = require('request');
 const mysql = require('mysql');
 const mkQuery = require('./dbutil');
 
@@ -80,44 +82,96 @@ app.get('/api/search', (req, res) => {
                 message: error,
                 timestamp: new Date().getTime()
             }
-            console.log('ErrorResponse: ', errorResponse);
+
+            res.statusCode(400).type('application/json')
+                .json(errorResponse);
         })
 })
 
 app.get('/api/book/:id', (req, res) => {
     const book_id = req.params.id;
+    console.log('BookID: ', book_id);
+    getBookById([book_id])
+        .then(result => {
+            const book = result[0];
+            book.authors = String(result[0].authors).split('|')
+            console.log('Book: ', book);
+
+            res.status(200).type('application/json')
+                .json({
+                    data: book,
+                    timestamp: new Date().getTime()
+                });
+        })
+        .catch(error => {
+            const errorResponse = {
+                status: 400,
+                message: error,
+                timestamp: new Date().getTime()
+            }
+            res.statusCode(400).type('application/json')
+                .json(errorResponse);
+        })
+})
+
+app.get('/api/book/:id/review', (req, res) => {
+    const book_id = req.params.id;
 
     getBookById([book_id])
         .then(result => {
-            console.log('GetBookById Result: ', result);
-/*
-            book_id: string;
-            title: string;
-            authors: string[];
-            description: string;
-            edition: string;
-            format: string;
-            pages: number;
-            rating: number;
-            rating_count: number;
-            review_count: number;
-            genres: string[];
-            image_url: string;
-*/
-            // const book = {
-            //     book_id: result.book_id,
-            //     title: result.title,
-            //     authors: String(result.authors).split('|'),
-            //     description: result.description,
-            //     edition: result.edition,
-            //     format: result.format,
-            //     pages: result.pages,
-
-            // }
-            const book = result;
-            book.authors = String(result.authors).split('|')
+            const book = result[0];
+            book.authors = String(result[0].authors).split('|')
             console.log('Book: ', book);
-            
+
+            // NYT Request Option
+            const options = {
+                url: process.env.API_URL,
+                qs: {
+                    'title': book.title,
+                    'api-key': process.env.API_KEY
+                }
+            };
+            console.log('Options:', options);
+
+            request(options, (error, response, body) => {
+                if (!error && response.statusCode == 200) {
+                    const results = JSON.parse(body)['results'];
+                    const reviews = results.map(v => {
+                        const review = {
+                            book_id: book.book_id,
+                            title: book.title,
+                            authors: book.authors,
+                            byline: v.byline,
+                            summary: v.summary,
+                            url: v.url
+                        };
+                        return review;
+                    });
+
+                    res.status(200).type('application/json')
+                        .json({
+                            data: reviews,
+                            timestamp: new Date().getTime()
+                        });
+                } else {
+                    const errorResponse = {
+                        status: 400,
+                        message: error,
+                        timestamp: new Date().getTime()
+                    }
+                    res.statusCode(400).type('application/json')
+                        .json(errorResponse);
+                }
+            })
+        })
+        .catch(error => {
+            const errorResponse = {
+                status: 400,
+                message: error,
+                timestamp: new Date().getTime()
+            }
+            res.statusCode(400).type('application/json')
+                .json(errorResponse);
         })
 })
 
